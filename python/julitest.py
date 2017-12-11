@@ -6,6 +6,11 @@ import socket
 import string
 import led_h as on
 import led_l as off
+import flash
+import subprocess
+import tv_off
+import ty_on
+import os
 
 host = 'localhost'   # Raspberry PiのIPアドレス
 port = 10500         # juliusの待ち受けポート
@@ -21,24 +26,28 @@ while True:
     while (string.find(data, "\n.") == -1):
         data = data + sock.recv(1024)
 
-        # print(data)
-        # data = ""
     # 音声XMLデータから、<WORD>を抽出して音声テキスト文に連結する。
     strTemp = ""
     for line in data.split('\n'):
         index = line.find('WORD="')
-        idd = line.find('CLASSID="')
 
-        if idd != -1:
-            kkk = line[idd + 9:line.find('"', idd + 9)]
-            if index != -1 and kkk != "3" and kkk != "4":
-                line = line[index + 6:line.find('"', index + 6)]
+
+        if index != -1:
+            line = line[index + 6:line.find('"', index + 6)]
+            if line != "[s]":
                 strTemp = strTemp + line
-
-    # print("結果:" + strTemp)
-    if strTemp == "ひかれごま":
-        on.main()
-    if strTemp == "うんこなう":
-        off.main()
-    # print(strTemp)
+    if strTemp != "":
+        print("結果:" + strTemp)
+    if strTemp == "つけて":  # if you say Hikaregoma, led will turn on
+        #os.system('sudo python ~/irmcli/irmcli.py -p -f ~/irmcli/light_on.json')
+	on.main()
+    if strTemp == "けして":
+        #os.system('sudo python ~/irmcli/irmcli.py -p -f ~/irmcli/light_off.json')
+	off.main()
+    if strTemp == "てんめつ":
+        flash.main()
+    #if strTemp == "てれびつけて":
+        #ty_on.main()
+    #if strTemp == "てれびけして":
+        #tv_off.main()
     data = ""

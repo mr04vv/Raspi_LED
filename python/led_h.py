@@ -4,8 +4,9 @@ import time
 
 def main():
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(25, GPIO.OUT)
+    GPIO.setup(2, GPIO.OUT)
+    GPIO.output(2, GPIO.HIGH)
 
-    GPIO.output(25, GPIO.HIGH)
-    # time.sleep(2)
-    # GPIO.cleanup()
+
+if __name__ == "__main__":
+    main()
